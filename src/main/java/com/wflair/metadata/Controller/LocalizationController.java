@@ -18,7 +18,7 @@ public class LocalizationController {
     @GetMapping(value = "/", produces = MediaType.TEXT_PLAIN_VALUE)
     public String index() {
 
-        return "This is Home page";
+        return "This is THE Home page";
     }
 
     @GetMapping(value = "/localizations", produces = MediaType.TEXT_PLAIN_VALUE)
