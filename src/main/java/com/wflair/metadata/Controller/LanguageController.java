@@ -7,6 +7,7 @@ import com.wflair.metadata.Service.QueryService.LanguageQS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +31,8 @@ public class LanguageController {
         return commandService.putLanguage(newLanguage);
     }
 
-    @GetMapping(value = "/language")
-    public Language getLanguageById(@RequestParam(value = "id") long id) {
+    @GetMapping(value = "/language/{id}")
+    public Language getLanguageById(@PathVariable long id) {
         return queryService.findLanguage(id);
     }
 
@@ -40,8 +41,8 @@ public class LanguageController {
         return queryService.findLanguage(label);
     }
 
-    @DeleteMapping(value = "/language")
-    public void deleteLanguageById(@RequestParam(value = "id") long id) {
+    @DeleteMapping(value = "/language/{id}")
+    public void deleteLanguageById(@PathVariable long id) {
         commandService.deleteLanguage(id);
     }
 
