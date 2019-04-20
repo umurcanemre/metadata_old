@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -19,6 +20,7 @@ public class Language {
     private Long id;
     @Column(unique = true)
     private String label;
+    @EqualsAndHashCode.Exclude
     private String name;
 
     public Language(String label, String name) {
