@@ -1,4 +1,4 @@
-package com.wflair.metadata.LocalizationServiceImplementation.QueryService;
+package com.wflair.metadata.ServiceImplementation.QueryService;
 
 import java.util.List;
 

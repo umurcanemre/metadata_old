@@ -2,6 +2,7 @@ package com.wflair.metadata.Domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +12,8 @@ import lombok.EqualsAndHashCode;
 public class Localization{
     @Id
     String id;
-    String language;
+    @ManyToOne
+    Language language;
     String label;
     @EqualsAndHashCode.Exclude 
     String value;
