@@ -1,5 +1,7 @@
 package com.wflair.metadata.Controller;
 
+import java.util.Set;
+
 import com.wflair.metadata.Domain.Language;
 import com.wflair.metadata.Service.CommandService.LanguageCS;
 import com.wflair.metadata.Service.QueryService.LanguageQS;
@@ -49,5 +51,10 @@ public class LanguageController {
     @DeleteMapping(value = "/language")
     public void deleteLanguageByLabel(@RequestParam(value = "label") String label) {
         commandService.deleteLanguage(label);
+    }
+
+    @GetMapping(value = "/languages")
+    public Set<Language> getAllLanguages(){
+        return queryService.getAll();
     }
 }
