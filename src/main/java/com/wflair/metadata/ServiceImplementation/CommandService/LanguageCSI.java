@@ -1,5 +1,7 @@
 package com.wflair.metadata.ServiceImplementation.CommandService;
 
+import java.util.Optional;
+
 import com.wflair.metadata.Domain.Language;
 import com.wflair.metadata.Repository.LanguageRepository;
 import com.wflair.metadata.Service.CommandService.LanguageCS;
@@ -23,25 +25,26 @@ public class LanguageCSI implements LanguageCS {
 
     @Override
     public Language putLanguage(Language language) {
-        Language existingLanguage = findExistingLanguage(language);
-
-        if (existingLanguage != null) {
-            existingLanguage.updateLanguage(language);
-            return repository.save(existingLanguage);
+        Optional<Language> existingLanguage = queryService.findIfLanguageExists(language);
+        if (existingLanguage.isPresent()) {
+            existingLanguage.get().updateLanguage(language);
+            return repository.save(existingLanguage.get());
         } else {
             Language newLanguage = new Language(language.getLabel(), language.getName());
             return repository.save(newLanguage);
         }
     }
 
-    private Language findExistingLanguage(Language language) {
-        Language existingLanguage;
-        if (language.getId().compareTo(Integer.toUnsignedLong(0)) > 0) {
-            existingLanguage = queryService.findLanguage(language.getId());
-        } else {
-            existingLanguage = queryService.findLanguage(language.getLabel());
-        }
-        return existingLanguage;
+    @Override
+    public void deleteLanguage(Long id) {
+        Language language = queryService.findLanguage(id);
+        repository.delete(language);
+    }
+
+    @Override
+    public void deleteLanguage(String label) {
+        Language language = queryService.findLanguage(label);
+        repository.delete(language);
     }
 
 }
