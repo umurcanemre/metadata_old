@@ -1,37 +1,36 @@
 package com.wflair.metadata.Domain;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-@Table(uniqueConstraints =  @UniqueConstraint(columnNames = {"label","language_id"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "label" }))
 public class Localization {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(updatable = false, nullable = false)
-    private Long id;
-    private String label;
-    @ManyToOne
-    Language language;
-    @EqualsAndHashCode.Exclude
-    String value;
+    Long id;
+    String label;
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = false)
+    Set<LocalizationValue> values; 
 
-    public Localization(String label, String value, Language language) {
+    public Localization(String label,Set<LocalizationValue> values) {
         this.label = label.toLowerCase();
-        this.language = language;
-        this.value = value;
+        this.values = values;
     }
 
     public void setLabel(String label) {

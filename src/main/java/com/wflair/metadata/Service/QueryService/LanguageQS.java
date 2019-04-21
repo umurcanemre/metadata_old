@@ -1,5 +1,6 @@
 package com.wflair.metadata.Service.QueryService;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,4 +16,6 @@ public interface LanguageQS {
     Language findLanguage(Language language);
 
     Set<Language> getAll();
+
+    Map<String,Language> findLanguages(Set<String> labels);
 }

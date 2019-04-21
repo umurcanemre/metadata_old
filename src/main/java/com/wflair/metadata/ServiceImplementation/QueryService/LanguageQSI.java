@@ -1,7 +1,10 @@
 package com.wflair.metadata.ServiceImplementation.QueryService;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.StreamSupport;
 
 import com.google.common.collect.Sets;
 import com.wflair.metadata.Domain.Language;
@@ -15,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-@Transactional(readOnly =  true)
+@Transactional(readOnly = true)
 public class LanguageQSI implements LanguageQS {
     @Autowired
     LanguageRepository repository;
@@ -62,5 +65,13 @@ public class LanguageQSI implements LanguageQS {
     @Override
     public Set<Language> getAll() {
         return Sets.newHashSet(repository.findAll());
+    }
+
+    @Override
+    public Map<String, Language> findLanguages(Set<String> labels) {
+        Iterable<Language> result = repository.findByLabelIn(labels);
+        Map<String, Language> response = new HashMap<>();
+        StreamSupport.stream(result.spliterator(), false).forEach(l-> response.put(l.getLabel(),l));
+        return response;
     }
 }

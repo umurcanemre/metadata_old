@@ -3,6 +3,7 @@ package com.wflair.metadata.Controller;
 import java.util.Set;
 
 import com.wflair.metadata.Domain.Localization;
+import com.wflair.metadata.Request.CreateLocalizationRequest;
 import com.wflair.metadata.Service.CommandService.LocalizationCS;
 import com.wflair.metadata.Service.QueryService.LocalizationQS;
 
@@ -22,34 +23,33 @@ public class LocalizationController {
     @Autowired
     LocalizationCS commandService;
 
-    @GetMapping(value =  "/localization/{langLabel}/{label}")
-    public Localization getLocalizationByLabel(@PathVariable String langLabel, @PathVariable String label){
-        return queryService.findLocalization(label,langLabel);
+    @GetMapping(value = "/localization/{label}")
+    public Localization getLocalizationByLabel(@PathVariable String label) {
+        return queryService.findLocalization(label);
     }
 
-    @GetMapping(value =  "/localization/id/{id}")
-    public Localization getLocalizationById(@PathVariable long id){
+    @GetMapping(value = "/localization/id/{id}")
+    public Localization getLocalizationById(@PathVariable long id) {
         return queryService.findLocalization(id);
     }
 
     @PostMapping(value = "/localization")
-    public Localization saveLocalization(@RequestBody Localization newLocalization) {
-        return commandService.saveLocalization(newLocalization.getLabel(), newLocalization.getValue(), newLocalization.getLanguage().getLabel());
+    public Localization saveLocalization(@RequestBody CreateLocalizationRequest request) {
+        return commandService.saveLocalization(request);
     }
 
-    @PutMapping(value = "/localization")
+    @PutMapping(value = "/localization")//FIXME
     public Localization putLocalization(@RequestBody Localization newLocalization) {
         return commandService.putLocalization(newLocalization);
     }
 
-    @DeleteMapping(value = "/localization/{langLabel}/{label}")
-    public void deletelocalizationByLabel(@PathVariable String langLabel, @PathVariable String label) {
-        commandService.deleteLocalization(label, langLabel);
+    @DeleteMapping(value = "/localization/{label}")
+    public void deletelocalizationByLabel(@PathVariable String label) {
+        commandService.deleteLocalization(label);
     }
 
     @GetMapping(value = "/localizations")
-    public Set<Localization> getAlllocalizations(){
+    public Set<Localization> getAlllocalizations() {
         return queryService.findAllLocalizations();
     }
-
 }

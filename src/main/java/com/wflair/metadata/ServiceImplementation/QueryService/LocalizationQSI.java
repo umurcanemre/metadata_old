@@ -1,10 +1,10 @@
 package com.wflair.metadata.ServiceImplementation.QueryService;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
-import com.wflair.metadata.Domain.Language;
 import com.wflair.metadata.Domain.Localization;
 import com.wflair.metadata.Repository.LocalizationRepository;
 import com.wflair.metadata.Service.QueryService.LanguageQS;
@@ -36,8 +36,8 @@ public class LocalizationQSI implements LocalizationQS {
     }
 
     @Override
-    public Localization findLocalization(String label, String languageLabel) {
-        Optional<Localization> localization = findIfLocalizationExists(label, languageLabel);
+    public Localization findLocalization(String label) {
+        Optional<Localization> localization = findIfLocalizationExists(label);
         return checkLocalizationQuery(localization);
     }
 
@@ -49,9 +49,13 @@ public class LocalizationQSI implements LocalizationQS {
     }
 
     @Override
-    public Optional<Localization> findIfLocalizationExists(String label, String languageLabel) {
-        Language language = languageQS.findLanguage(languageLabel);
-        return repository.findByLabelAndLanguage(label, language);
+    public Optional<Localization> findIfLocalizationExists(String label) {
+        return repository.findByLabel(label);
+    }
+
+    @Override
+    public Set<Localization> findLocalizations(List<String> localizationLabels) {
+        return repository.findByLabelIn(localizationLabels);
     }
 
 }

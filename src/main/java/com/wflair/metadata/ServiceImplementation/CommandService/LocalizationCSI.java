@@ -1,10 +1,16 @@
 package com.wflair.metadata.ServiceImplementation.CommandService;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 import com.wflair.metadata.Domain.Language;
 import com.wflair.metadata.Domain.Localization;
+import com.wflair.metadata.Domain.LocalizationValue;
 import com.wflair.metadata.Repository.LocalizationRepository;
+import com.wflair.metadata.Request.CreateLocalizationRequest;
 import com.wflair.metadata.Service.CommandService.LocalizationCS;
 import com.wflair.metadata.Service.QueryService.LanguageQS;
 import com.wflair.metadata.Service.QueryService.LocalizationQS;
@@ -22,36 +28,43 @@ public class LocalizationCSI implements LocalizationCS {
     LocalizationRepository repository;
 
     @Override
-    public Localization saveLocalization(String label, String value, String languageLabel) {
-        Language lang = languageQS.findLanguage(languageLabel);
-        Localization localization = new Localization(label, value, lang);
+    public Localization saveLocalization(CreateLocalizationRequest request) {
+        Set<LocalizationValue> values = prepareLocalizationValues(request);
+        Localization localization = new Localization(request.getLocalizationLabel(),values);
         return repository.save(localization);
+    }
+
+    private Set<LocalizationValue> prepareLocalizationValues(CreateLocalizationRequest request){
+        Map<String,Language> langs = languageQS.findLanguages(request.getLanguageValueMap().keySet());
+        Set<LocalizationValue> resp = new HashSet<>();
+        for(Entry<String,String> e : request.getLanguageValueMap().entrySet()){
+            if(langs.containsKey(e.getKey())){
+                resp.add(new LocalizationValue(langs.get(e.getKey()),e.getValue()));
+            }
+        }
+        return resp;
     }
 
     @Override
     public Localization putLocalization(Localization localization) {
-        Optional<Localization> foundLocalization = queryService.findIfLocalizationExists(localization.getLabel(), localization.getLanguage().getLabel());
+        Optional<Localization> foundLocalization = queryService.findIfLocalizationExists(localization.getLabel());
         if (foundLocalization.isPresent()){
             return updateLocalization(foundLocalization.get(),localization);
         }
         else {
-            return saveLocalization(localization.getLabel(), localization.getValue(),
-                    localization.getLanguage().getLabel());
+            return updateLocalization(new Localization(),localization);
         }
     }
 
     private Localization updateLocalization(Localization existingLocalization, Localization localization) {
-        Language newLanguage = languageQS.findLanguage(localization.getLanguage());
-
         existingLocalization.setLabel(localization.getLabel());
-        existingLocalization.setLanguage(newLanguage);
-        existingLocalization.setValue(localization.getValue());
+        existingLocalization.setValues(localization.getValues());
         return repository.save(existingLocalization);
     }
 
     @Override
-    public void deleteLocalization(String label, String langLabel) {
-        Localization localization = queryService.findLocalization(label, langLabel);
+    public void deleteLocalization(String label) {
+        Localization localization = queryService.findLocalization(label);
         repository.delete(localization);
     }
 
