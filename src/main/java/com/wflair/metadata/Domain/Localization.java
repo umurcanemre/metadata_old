@@ -25,7 +25,7 @@ public class Localization {
     @Column(updatable = false, nullable = false)
     Long id;
     String label;
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = false)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     Set<LocalizationValue> values; 
 
     public Localization(String label,Set<LocalizationValue> values) {

@@ -6,7 +6,7 @@ import com.wflair.metadata.Domain.Localization;
 public interface LocalizationCS {
     Localization saveLocalization(CreateLocalizationRequest request);
 
-    Localization putLocalization(Localization localization);
-
     void deleteLocalization(String label);
+
+	Localization putLocalization(CreateLocalizationRequest request);
 }

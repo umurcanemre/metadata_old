@@ -38,9 +38,9 @@ public class LocalizationController {
         return commandService.saveLocalization(request);
     }
 
-    @PutMapping(value = "/localization")//FIXME
-    public Localization putLocalization(@RequestBody Localization newLocalization) {
-        return commandService.putLocalization(newLocalization);
+    @PutMapping(value = "/localization")
+    public Localization putLocalization(@RequestBody CreateLocalizationRequest request) {
+        return commandService.putLocalization(request);
     }
 
     @DeleteMapping(value = "/localization/{label}")
