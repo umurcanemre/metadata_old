@@ -66,11 +66,23 @@ public class LocalizationCSI implements LocalizationCS {
         }
     }
 
-    // TODO: better refactor
     public void modifyLocalizationValues(Localization localization, Map<String, String> newValues) {
         List<LocalizationValue> removeList = getValuesToRemove(localization, newValues);
+        List<LocalizationValue> addList = getValuesToUpsert(localization, newValues)
+        localization.getValues().addAll(addList);
+    }
+
+    private List<LocalizationValue> getValuesToRemove(Localization localization, Map<String, String> newValues){
+        List<LocalizationValue> removeList = new ArrayList<>();
+        for(LocalizationValue value : localization.getValues()){
+            if(!newValues.containsKey(value.getLanguage().getLabel()))
+                removeList.add(value);
+        }
+        return removeList;
+    }
+
+    private List<LocalizationValue> getValuesToUpsert(Localization localization, Map<String, String> newValues){
         List<LocalizationValue> addList = new ArrayList<>();
-        localization.getValues().removeAll(removeList);
         newValues.entrySet().stream().forEach(e -> {
             Optional<LocalizationValue> value = localization.getValues().stream()
                     .filter(l -> l.getLanguage().getLabel().equals(e.getKey())).findAny();
@@ -82,15 +94,6 @@ public class LocalizationCSI implements LocalizationCS {
                 addList.add(new LocalizationValue(lang, e.getValue()));
             }
         });
-        localization.getValues().addAll(addList);
-    }
-
-    private List<LocalizationValue> getValuesToRemove(Localization localization, Map<String, String> newValues){
-        List<LocalizationValue> removeList = new ArrayList<>();
-        for(LocalizationValue value : localization.getValues()){
-            if(!newValues.containsKey(value.getLanguage().getLabel()))
-                removeList.add(value);
-        }
-        return removeList;
+        return addList;
     }
 }
