@@ -3,7 +3,7 @@ package com.wflair.metadata.Controller;
 import java.util.Set;
 
 import com.wflair.metadata.Domain.LocalizationSet;
-import com.wflair.metadata.Request.CreateLocalizationSetRequest;
+import com.wflair.metadata.Request.LocalizationSetRequest;
 import com.wflair.metadata.Service.CommandService.LocalizationSetCS;
 import com.wflair.metadata.Service.QueryService.LocalizationSetQS;
 
@@ -28,8 +28,18 @@ public class LocalizationSetController {
     }
 
     @PostMapping(value = "/localizationset")
-    public LocalizationSet saveLocalization(@RequestBody CreateLocalizationSetRequest request) {
+    public LocalizationSet saveLocalization(@RequestBody LocalizationSetRequest request) {
         return commandService.save(request);
+    }
+
+    @PostMapping(value = "/localizationset/addlocalization")
+    public LocalizationSet addLocalizationToSet(@RequestBody LocalizationSetRequest request) {
+        return commandService.addLocalization(request);
+    }
+
+    @PostMapping(value = "/localizationset/removelocalization")
+    public LocalizationSet removeLocalizationFromSet(@RequestBody LocalizationSetRequest request) {
+        return commandService.removeLocalization(request);
     }
 
     @DeleteMapping(value = "/localizationset/{label}")

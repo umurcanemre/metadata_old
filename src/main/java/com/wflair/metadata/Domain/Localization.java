@@ -36,4 +36,20 @@ public class Localization {
     public void setLabel(String label) {
         this.label = label.toLowerCase();
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(! (o instanceof Localization))
+            return false;
+    
+        Localization controlee = (Localization)o;
+        if(controlee == this)
+            return true;
+        if(controlee.getId() != null && controlee.getId().equals(this.id))
+            return true;
+        if(controlee.getLabel() != null && controlee.getLabel().equals(this.getLabel()))
+            return true;
+
+        return false;
+    }
 }

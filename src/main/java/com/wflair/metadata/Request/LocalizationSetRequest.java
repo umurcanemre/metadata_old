@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class CreateLocalizationSetRequest{
+public class LocalizationSetRequest{
     String label;
     List<String> localizationLabels;
 }
