@@ -68,7 +68,8 @@ public class LocalizationCSI implements LocalizationCS {
 
     public void modifyLocalizationValues(Localization localization, Map<String, String> newValues) {
         List<LocalizationValue> removeList = getValuesToRemove(localization, newValues);
-        List<LocalizationValue> addList = getValuesToUpsert(localization, newValues)
+        List<LocalizationValue> addList = getValuesToUpsert(localization, newValues);
+        localization.getValues().removeAll(removeList);
         localization.getValues().addAll(addList);
     }
 
