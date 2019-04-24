@@ -1,6 +1,17 @@
+buildscript {
+    dependencies {
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
+    }
+}
 plugins {
 	id 'org.springframework.boot' version '2.1.4.RELEASE'
+	id "com.palantir.docker" version "0.22.1"
 	id 'java'
+}
+
+bootJar {
+    baseName = 'spring-boot-metadata'
+    version =  '0.1.0'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -30,4 +41,15 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compile('org.springframework.boot:spring-boot-starter-web')
+}
+
+task unpack(type: Copy) {
+    dependsOn bootJar
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into("build/dependency")
+}
+docker {
+    name "${project.group}/${bootJar.baseName}"
+    copySpec.from(tasks.unpack.outputs).into("dependency")
+    buildArgs(['DEPENDENCY': "dependency"])
 }
