@@ -6,6 +6,7 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import com.wflair.metadata.Domain.LocalizationSet;
 import com.wflair.metadata.Repository.LocalizationSetRepository;
+import com.wflair.metadata.ResponseObj.LocalizationResponse;
 import com.wflair.metadata.Service.QueryService.LanguageQS;
 import com.wflair.metadata.Service.QueryService.LocalizationSetQS;
 
@@ -41,6 +42,12 @@ public class LocalizationSetQSI implements LocalizationSetQS {
             return foundLocalizationSet.get();
         else
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Localization Not Found");
+    }
+
+    @Override
+    public LocalizationResponse getLocalizationResponse(String setLabel, String lang) {
+        LocalizationSet set = find(setLabel);
+        return new LocalizationResponse(lang, set);
     }
 
 }
